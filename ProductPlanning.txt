@@ -1,10 +1,17 @@
 Login/Register feature
 Prompt user to login or register (stretch, if a username is invalid ask if they would like to register)
-accept user input for username
-accept user input for password
+	accept user input for username #DONE
+	accept user input for password #DONE
+	# TODO # create registration functionality
+	
 authenticate user as Employee or Manager
-(for now hardcode an employee and a manager to get login functionality)
+	# TEMP for now hardcode an employee and a manager to get login functionality #DONE
+	create user object of type to associate with permissions
+		Class user
+		create the user for use in the session and associate with a user type
+
 maybe a menus class for menu options
 
-	Class employee
-	create the user for use in the session and associate with menus appropriate for the employee permissions
+In main initialize a user object #DONE
+
+create a menu class to accept a user object and present a menu based on usertype
