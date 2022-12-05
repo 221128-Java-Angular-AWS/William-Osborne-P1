@@ -1,17 +1,65 @@
 Login/Register feature
 Prompt user to login or register (stretch, if a username is invalid ask if they would like to register)
-	accept user input for username #DONE
-	accept user input for password #DONE
-	# TODO # create registration functionality
-	
+accept user input for username
+accept user input for password
 authenticate user as Employee or Manager
-	# TEMP for now hardcode an employee and a manager to get login functionality #DONE
-	create user object of type to associate with permissions
-		Class user
-		create the user for use in the session and associate with a user type
-
+(for now hardcode an employee and a manager to get login functionality)
 maybe a menus class for menu options
 
-In main initialize a user object #DONE
+	Class user
+	create upon successfull login
+	user id (id for db later)
+	uername
+	user type (for permissions later)
 
-create a menu class to accept a user object and present a menu based on usertype
+
+
+
+
+### UserLogin ###
+
+accept a username 
+accept a password
+validate credentials and create new User object of that user
+	once db is set up get user_id, username, user_type for User object
+	user_id wont be used yet but can be part for use after mvp is met
+return User object
+
+
+
+
+
+### Menus ###
+Generate menu functionality with the correct choices for the login type
+Employee:
+	submit ticket
+	view submitted tickets optional filter by status
+
+Manager:
+	process Pending tickets (approve or deny)
+	view pending tickets
+		(probably give option for specific ticket id and overload method for processing)
+
+
+
+
+
+### Databases ###
+
+Table users:
+user_id SERIAL PRIMARY KEY,
+username VARCHAR(100) NOT NULL,
+password VARCHAR(255) NOT NULL,
+user_type VARCHAR(10) DEFAULT employee;
+
+Table tickets:
+ticket_id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(user_id),
+amount NUMERIC NOT NULL,
+description VARCHAR(255) NOT NULL,
+date NOT NULL DEFAULT CURRENT_DATE,
+status VARCHAR(10) DEFAULT 'pending';
+
+## status limited to pending, approved, denied
+## no date option when submitting, just the current date (may change after mvp met)
+## when fetching tickets for managersselect only pending tickets

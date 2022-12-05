@@ -1,5 +1,10 @@
+
+
 public class Menus {
     //@TODO: create and move the login prompts here as well
+    public void mainMenu(){
+
+    }
 
     public void employeeMenu(User user){
         System.out.println("==========MENU==========");

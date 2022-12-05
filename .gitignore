@@ -1,3 +1,6 @@
+# File to contain any sensitive/login info
+*.properties
+
 # Compiled class file
 *.class
 
