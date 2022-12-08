@@ -6,13 +6,19 @@ authenticate user as Employee or Manager
 (for now hardcode an employee and a manager to get login functionality)
 maybe a menus class for menu options
 
-	Class user
+	Class users
 	create upon successfull login
 	user id (id for db later)
 	uername
-	user type (for permissions later)
+	password
+	user role (for permissions later)
 
-
+	Class tickets
+	ticket id
+	amount
+	description
+	status
+	user id (references user table)
 
 
 
@@ -46,20 +52,22 @@ Manager:
 
 ### Databases ###
 
-Table users:
-user_id SERIAL PRIMARY KEY,
-username VARCHAR(100) NOT NULL,
-password VARCHAR(255) NOT NULL,
-user_type VARCHAR(10) DEFAULT employee;
+CREATE TABLE users (
+	user_id SERIAL PRIMARY KEY,
+	username VARCHAR(50) UNIQUE NOT NULL,
+	"password" VARCHAR(100) NOT NULL,
+	user_role VARCHAR(10) DEFAULT 'employee'
+);
 
-Table tickets:
-ticket_id SERIAL PRIMARY KEY,
-user_id INTEGER REFERENCES users(user_id),
-amount NUMERIC NOT NULL,
-description VARCHAR(255) NOT NULL,
-date NOT NULL DEFAULT CURRENT_DATE,
-status VARCHAR(10) DEFAULT 'pending';
+CREATE TABLE tickets (
+	ticket_id SERIAL PRIMARY KEY,
+	amount MONEY,
+	description VARCHAR(800),
+	status VARCHAR(10) DEFAULT 'pending',
+	user_id INTEGER,
+	CONSTRAINT tickets_users_fk FOREIGN KEY (user_id) REFERENCES users (user_id)
+);
 
-## status limited to pending, approved, denied
-## no date option when submitting, just the current date (may change after mvp met)
-## when fetching tickets for managersselect only pending tickets
+
+## when fetching tickets for manager sselect only pending tickets
+## should add date to tickets once mvp met
