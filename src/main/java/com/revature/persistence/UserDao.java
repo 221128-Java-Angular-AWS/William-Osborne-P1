@@ -93,7 +93,6 @@ public class UserDao {
         // fetch this from the database
         // if the result set is empty the username is free and the end user can proceed with registration
         // otherwise throw a UsernameExists exception
-        // @TODO: I guess this will run before createUser is allowed to run
         try {
             String sql = "SELECT username FROM users WHERE username LIKE ?";
 

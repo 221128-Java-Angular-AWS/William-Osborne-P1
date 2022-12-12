@@ -12,17 +12,25 @@ public class User {
     once I stub out some more functionality in the userDAO I will know more
      */
 
-    // all args constructor might never get used
     public User(int userId, String username, String password, String userRole){
+        // all args constructor will never get used
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.userRole = userRole;
     }
 
-    // username only constructor for registration
-    // use to check if username exists before allowing password creation
+
+    public User (String username, String password) {
+        // username and password constructor for normal login
+        this.username = username;
+        this.password = password;
+    }
+
+
     public User(String username){
+        // username only constructor for registration
+        // use to check if username exists before allowing password creation
         this.username = username;
     }
 
