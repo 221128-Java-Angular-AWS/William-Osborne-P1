@@ -12,6 +12,10 @@ public class User {
     once I stub out some more functionality in the userDAO I will know more
      */
 
+    public User() {
+
+    }
+
     public User(int userId, String username, String password, String userRole){
         // all args constructor will never get used
         this.userId = userId;

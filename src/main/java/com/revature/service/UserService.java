@@ -1,6 +1,8 @@
 package com.revature.service;
 
 
+import com.revature.exceptions.IncorrectPasswordException;
+import com.revature.exceptions.UserNotFoundException;
 import com.revature.exceptions.UsernameExistsException;
 import com.revature.persistence.UserDao;
 import com.revature.pojos.User;
@@ -9,7 +11,9 @@ import java.util.Scanner;
 
 /*
 methods that apply to the user should be created here
-also where the
+ ## register
+ ## authenticate
+ ## update
  */
 public class UserService {
     //Create the data access object
@@ -19,21 +23,41 @@ public class UserService {
         this.dao = dao;
     }
 
-    public void registerNewUser(User user) throws UsernameExistsException {
-        // just some skeleton testing here now
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter a username");
-        String username = sc.nextLine();
-        user.setUsername(username);
-        dao.fetchUserForRegistration(user);
+    public User registerNewUser(User user) throws UsernameExistsException {
+        // register a new user
+        // if username exists an eexception will be caught and user will be returned null
+        // do not continue if user is null
+        user = dao.fetchUserForRegistration(user);
+        // I dont think I need the if statement due to the exception but will try with and without
+        if (!(user == null)) {
+            dao.createUser(user);
+            return user;
+        }
+        return null;
 
-
-
-
-
-
-        sc.close();
     }
+
+    public User authenticateUser(User user) throws UserNotFoundException, IncorrectPasswordException {
+        // @TODO this is nothing, make it actually authenticate user
+        user = dao.AuthenticateUser(user);
+        // I dont think I need the if statement due to the exception but will try with and without
+        if (!(user == null)) {
+            return user;
+        }
+        return null;
+
+
+    }
+
+
+    public User updateUser(User user) {
+        dao.updateUser(user);
+        return user;
+    }
+
+
+
+
 
 
 }
