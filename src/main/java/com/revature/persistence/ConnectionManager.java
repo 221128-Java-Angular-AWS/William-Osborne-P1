@@ -42,7 +42,7 @@ public class ConnectionManager {
             // build the database url string
             // uses hardcoded strings as well as the properties in the jdbc.properties file
             StringBuilder builder = new StringBuilder();
-            builder.append("jdbc://postgresql://");
+            builder.append("jdbc:postgresql://");
             builder.append(props.getProperty("host"));
             builder.append(":");
             builder.append(props.getProperty("port"));
@@ -50,7 +50,7 @@ public class ConnectionManager {
             builder.append(props.getProperty("dbname"));
             builder.append("?user=");
             builder.append(props.getProperty("username"));
-            builder.append("&password");
+            builder.append("&password=");
             builder.append(props.getProperty("password"));
 
             connection = DriverManager.getConnection(builder.toString());

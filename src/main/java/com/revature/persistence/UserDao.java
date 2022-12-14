@@ -123,10 +123,7 @@ public class UserDao {
         try {
             // build the sql string to get user by username
             // (String sql is in method scope)
-            String sql =
-                    "SELECT (user_id, username, password, user_role) " +
-                            "FROM users " +
-                            "WHERE username = ?;";
+            String sql = "SELECT * FROM users WHERE username = ?;";
 
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user.getUsername());

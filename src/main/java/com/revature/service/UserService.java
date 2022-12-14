@@ -25,16 +25,17 @@ public class UserService {
 
     public User registerNewUser(User user) throws UsernameExistsException {
         // register a new user
-        // if username exists an eexception will be caught and user will be returned null
+        // if username exists an exception will be caught and user will be returned null
         // do not continue if user is null
         user = dao.fetchUserForRegistration(user);
-        // I dont think I need the if statement due to the exception but will try with and without
-        if (!(user == null)) {
-            dao.createUser(user);
-            return user;
-        }
-        return null;
 
+        // if the user.userRole is null set to employee
+        if (user.getUserRole() == null) {
+            user.setUserRole("employee");
+        }
+
+        dao.createUser(user);
+        return user;
     }
 
     public User authenticateUser(User user) throws UserNotFoundException, IncorrectPasswordException {

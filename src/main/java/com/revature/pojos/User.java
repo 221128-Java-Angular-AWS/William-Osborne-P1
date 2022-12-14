@@ -35,6 +35,7 @@ public class User {
     public User(String username){
         // username only constructor for registration
         // use to check if username exists before allowing password creation
+        // this is not needed since I provided username and password in registration
         this.username = username;
     }
 
@@ -72,5 +73,13 @@ public class User {
     }
 
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", userRole='" + userRole + '\'' +
+                '}';
+    }
 }
