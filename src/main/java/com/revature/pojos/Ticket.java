@@ -26,6 +26,10 @@ public class Ticket {
         this.userId = userId;
     }
 
+    public Ticket(String status) {
+        this.status = status;
+    }
+
     public Integer getTicketId() {
         return ticketId;
     }

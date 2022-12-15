@@ -19,7 +19,9 @@ public class UserService {
     //Create the data access object
     private UserDao dao;
 
+
     public UserService(UserDao dao){
+        // Constructor for the service that initializes a dao object
         this.dao = dao;
     }
 
@@ -46,8 +48,6 @@ public class UserService {
             return user;
         }
         return null;
-
-
     }
 
 

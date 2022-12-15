@@ -39,6 +39,16 @@ public class User {
         this.username = username;
     }
 
+
+    public User(Integer userId) {
+        this.userId = userId;
+    }
+
+    public User(Integer userId, String userRole) {
+        this.userId = userId;
+        this.userRole = userRole;
+    }
+
     // getters and setters, probably autogenerate for ticket
     public Integer getUserId(){
         return this.userId;

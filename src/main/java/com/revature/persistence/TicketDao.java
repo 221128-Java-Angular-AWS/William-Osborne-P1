@@ -27,7 +27,7 @@ public class TicketDao {
     }
 
 
-    public void submitTicket(User user, Ticket ticket) {
+    public boolean submitTicket(Ticket ticket) {
         // create a new ticket in the database, return true upon success
         try {
             // build the sql statement to be passed into PreparedStatement
@@ -37,7 +37,8 @@ public class TicketDao {
             // get ticket amount and description from the ticket object and user id from the user object
             pstmt.setDouble(1, ticket.getAmount());
             pstmt.setString(2, ticket.getDescription());
-            pstmt.setInt(3, user.getUserId());
+            pstmt.setInt(3, ticket.getUserId());
+            System.out.println(pstmt.toString());
             pstmt.executeUpdate();
 
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -45,11 +46,15 @@ public class TicketDao {
                 ticket.setTicketId(rs.getInt("ticket_id"));
             }
 
+            return true;
+
 
 
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
+            System.out.println("Ticket submission failed");
+            return false;
         }
     }
 
@@ -74,7 +79,9 @@ public class TicketDao {
                 ticket.setDescription(rs.getString("description"));
                 ticket.setStatus(rs.getString("status"));
                 ticket.setUserId(rs.getInt("user_id"));
+                tickets.add(ticket);
             }
+            System.out.println(tickets);
 
             return tickets;
 
@@ -88,7 +95,7 @@ public class TicketDao {
         // allow managers to select a ticket from the pending tickets and approve or deny them
         // pending filter in query as safeguard to prevent changing status if not pending
         try {
-            String sql = "UPDATE tickets SET status = ? WHERE ticket id = ? && status = 'pending';";
+            String sql = "UPDATE tickets SET status = ? WHERE ticket id = ? AND status = 'pending';";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, status);
             pstmt.setInt(2, ticket.getTicketId());
@@ -103,12 +110,12 @@ public class TicketDao {
     }
 
 
-    public Set<Ticket> getEmployeeTickets(User user) {
+    public Set<Ticket> getEmployeeTickets(Integer userId) {
         // for users to get all tickets
         try {
             String sql = "SELECT * FROM tickets WHERE user_id = ?;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, user.getUserId());
+            pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
 
             Set<Ticket> tickets = new HashSet<>();
@@ -119,22 +126,25 @@ public class TicketDao {
                 ticket.setDescription(rs.getString("description"));
                 ticket.setStatus(rs.getString("status"));
                 ticket.setUserId(rs.getInt("user_id"));
+                tickets.add(ticket);
             }
 
             return tickets;
 
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            System.out.println(e);
             throw new RuntimeException(e);
         }
     }
 
-    public Set<Ticket> getEmployeeTickets(User user, String status) {
+
+    public Set<Ticket> getEmployeeTickets(Integer userId, String status) {
         // for users to get tickets filtered by status
         try {
-            String sql = "SELECT * FROM tickets WHERE user_id = ? && status = ?;";
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = ?;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, user.getUserId());
+            pstmt.setInt(1, userId);
             pstmt.setString(2, status);
             ResultSet rs = pstmt.executeQuery();
 
@@ -146,12 +156,14 @@ public class TicketDao {
                 ticket.setDescription(rs.getString("description"));
                 ticket.setStatus(rs.getString("status"));
                 ticket.setUserId(rs.getInt("user_id"));
+                tickets.add(ticket);
             }
 
             return tickets;
 
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            System.out.println(e);
             throw new RuntimeException(e);
         }
     }

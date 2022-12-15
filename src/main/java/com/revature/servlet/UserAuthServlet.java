@@ -54,9 +54,11 @@ public class UserAuthServlet extends HttpServlet {
             resp.getWriter().print("Login successful " + authenticatedUser.getUserId());
             // create a cookie with the user id, this can be used later to associate users with actions and permissions
             Cookie authCookie = new Cookie("userId", user.getUserId().toString());
+            Cookie roleCookie = new Cookie("userRole", user.getUserRole());
             // add the cookie to the response, for now it won't do anything since everything is done in postman
             // however I can copy the cookie to the sample postman requests when performing ticket servelet operations
             resp.addCookie(authCookie);
+            resp.addCookie(roleCookie);
             resp.setStatus(200); // 200 ok
         } catch (UserNotFoundException e) {
             resp.getWriter().print("Invalid username, if new user please register first.");

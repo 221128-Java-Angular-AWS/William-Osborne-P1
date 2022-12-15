@@ -44,4 +44,34 @@
         <servlet-name>userLoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ticketSubmissionService</servlet-name>
+        <servlet-class>com.revature.servlet.EmployeeTicketServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ticketSubmissionService</servlet-name>
+        <url-pattern>/submit_ticket</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ticketSubmissionViewer</servlet-name>
+        <servlet-class>com.revature.servlet.EmployeeTicketServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ticketSubmissionViewer</servlet-name>
+        <url-pattern>/view_tickets</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>pendingTicketViewer</servlet-name>
+        <servlet-class>com.revature.servlet.ManagerTicketServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>pendingTicketViewer</servlet-name>
+        <url-pattern>/manage_pending_tickets</url-pattern>
+    </servlet-mapping>
 </web-app>
