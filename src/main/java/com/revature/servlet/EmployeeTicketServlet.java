@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class EmployeeTicketServlet extends HttpServlet {
     private TicketService ticketService;
@@ -52,12 +53,10 @@ public class EmployeeTicketServlet extends HttpServlet {
         // prevent updating their own tickets
         Integer userId = -1;
         Cookie[] cookies = req.getCookies();
-        System.out.println("Cookie found");
         for (int i = 0; i < cookies.length; i++) {
             if (cookies[i].getName().equals("userId")) {
                 Cookie authCookie = cookies[i];
                 userId = Integer.parseInt(authCookie.getValue());
-                System.out.println("User ID found: " + userId);
             }
         }
 
@@ -79,8 +78,7 @@ public class EmployeeTicketServlet extends HttpServlet {
         // prior to submission for added security
         boolean status = false;
 
-        System.out.println(ticket.toString());
-
+        // TODO: mvp met, update to create a response to indicate to the user why submission failed
         if (userId != -1) {
             status = ticketService.submitTicket(ticket);
         }
@@ -89,7 +87,7 @@ public class EmployeeTicketServlet extends HttpServlet {
             resp.getWriter().print("Ticket submission successful");
             resp.setStatus(201); // 201 created
         } else {
-            resp.getWriter().print("Ticket submission failed");
+            resp.getWriter().print("Ticket submission failed. Make sure to include both a description and an amount.");
             resp.setStatus(401); // 401 unauthorized
         }
     }
@@ -122,9 +120,12 @@ public class EmployeeTicketServlet extends HttpServlet {
         Ticket ticket = mapper.readValue(jsonBuilder.toString(), Ticket.class);
 
         // this will send a user id and either null or a desired status to filter tickets by
-        Set<Ticket> userTickets = ticketService.viewTickets(userId, ticket.getStatus());
+        TreeSet<Ticket> userTickets = ticketService.viewTickets(userId, ticket.getStatus());
+
         System.out.println(userTickets);
 
+        // because hashSet is unordered the results are not in any ordering. find a way to order results
+        // maybe hashmap and sorted array of keys
         String json = mapper.writeValueAsString(userTickets);
         System.out.println(json);
         resp.getWriter().println(json);

@@ -5,6 +5,8 @@ import com.revature.pojos.Ticket;
 import com.revature.pojos.User;
 
 import java.util.Set;
+import java.util.TreeSet;
+
 
 public class TicketService {
     /*
@@ -25,28 +27,43 @@ public class TicketService {
 
     public boolean submitTicket(Ticket ticket) {
         // userId is populated in the ticket object from the cookie giving the ticket object everything needed
+        // test for null values in amount or description
+
+        // message is not used, could create custom exceptions if I want to provide that to the user which
+        // would also prevent sending the ticket to the ticketDao
+        String message;
+        if (ticket.getAmount() == null) {
+            message = "Ticket amount cannot be empty";
+            return false;
+        } else if (ticket.getAmount() <= 0) {
+            message = "Ticket amount cannot be zero or negative";
+            return false;
+        } else if (ticket.getDescription() == null || ticket.getDescription().equals("")) {
+            message = "Description must be provided";
+            return false;
+        }
         return dao.submitTicket(ticket);
 
     }
 
 
-    public Set<Ticket> viewTickets(Integer userId, String status) {
+    public TreeSet<Ticket> viewTickets(Integer userId, String status) {
         // returns a set of previously submitted tickets for the user of a specified status or all submitted
         // tickets if no status is specified
         if (status != null) {
             System.out.println(status);
-            Set<Ticket> tickets = dao.getEmployeeTickets(userId, status);
+            TreeSet<Ticket> tickets = dao.getEmployeeTickets(userId, status);
             return tickets;
         } else {
             System.out.println("any status");
-            Set<Ticket> tickets = dao.getEmployeeTickets(userId);
+            TreeSet<Ticket> tickets = dao.getEmployeeTickets(userId);
             return tickets;
         }
     }
 
 
-    public Set<Ticket> managerViewTickets() {
-        Set<Ticket> tickets = dao.getPendingTickets();
+    public TreeSet<Ticket> managerViewTickets() {
+        TreeSet<Ticket> tickets = dao.getPendingTickets();
         return tickets;
     }
 

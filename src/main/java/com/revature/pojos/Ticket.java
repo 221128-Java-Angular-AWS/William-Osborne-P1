@@ -1,6 +1,6 @@
 package com.revature.pojos;
 
-public class Ticket {
+public class Ticket implements Comparable<Ticket>{
     private Integer ticketId;
     private Double amount;
     private String description;
@@ -79,5 +79,18 @@ public class Ticket {
                 ", status='" + status + '\'' +
                 ", userId=" + userId +
                 '}';
+    }
+
+
+    @Override
+    public int compareTo(Ticket o) {
+        // since the primary key ticket_id is serial it will be unique and for the purpose of this it will
+        // successfully sort results by oldest to newest
+        if (this.ticketId < o.getTicketId()) {
+            return -1;
+        } else if (this.ticketId > o.getTicketId()) {
+            return 1;
+        }
+        return 0;
     }
 }

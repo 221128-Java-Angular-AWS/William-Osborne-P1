@@ -16,6 +16,8 @@ import com.revature.pojos.User;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
+
 
 public class TicketDao {
     // create a Connection object
@@ -38,7 +40,6 @@ public class TicketDao {
             pstmt.setDouble(1, ticket.getAmount());
             pstmt.setString(2, ticket.getDescription());
             pstmt.setInt(3, ticket.getUserId());
-            System.out.println(pstmt.toString());
             pstmt.executeUpdate();
 
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -64,14 +65,14 @@ public class TicketDao {
     // need employees to be able to view all previous submissions
     // as well as filter by status
     //@TODO add date into ticketing system after mvp
-    public Set<Ticket> getPendingTickets() {
+    public TreeSet<Ticket> getPendingTickets() {
         // for managers to get all pending tickets
         try {
-            String sql = "SELECT * FROM tickets WHERE status = 'pending' ORDER BY ticket_id;";
+            String sql = "SELECT * FROM tickets WHERE status = 'pending';";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
 
-            Set<Ticket> tickets = new HashSet<>();
+            TreeSet<Ticket> tickets = new TreeSet<>();
             while (rs.next()) {
                 Ticket ticket = new Ticket();
                 ticket.setTicketId(rs.getInt("ticket_id"));
@@ -116,7 +117,7 @@ public class TicketDao {
     }
 
 
-    public Set<Ticket> getEmployeeTickets(Integer userId) {
+    public TreeSet<Ticket> getEmployeeTickets(Integer userId) {
         // for users to get all tickets
         try {
             String sql = "SELECT * FROM tickets WHERE user_id = ?;";
@@ -124,7 +125,7 @@ public class TicketDao {
             pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
 
-            Set<Ticket> tickets = new HashSet<>();
+            TreeSet<Ticket> tickets = new TreeSet<>();
             while (rs.next()) {
                 Ticket ticket = new Ticket();
                 ticket.setTicketId(rs.getInt("ticket_id"));
@@ -145,7 +146,7 @@ public class TicketDao {
     }
 
 
-    public Set<Ticket> getEmployeeTickets(Integer userId, String status) {
+    public TreeSet<Ticket> getEmployeeTickets(Integer userId, String status) {
         // for users to get tickets filtered by status
         try {
             String sql = "SELECT * FROM tickets WHERE user_id = ? AND status = ?;";
@@ -154,7 +155,7 @@ public class TicketDao {
             pstmt.setString(2, status);
             ResultSet rs = pstmt.executeQuery();
 
-            Set<Ticket> tickets = new HashSet<>();
+            TreeSet<Ticket> tickets = new TreeSet<>();
             while (rs.next()) {
                 Ticket ticket = new Ticket();
                 ticket.setTicketId(rs.getInt("ticket_id"));

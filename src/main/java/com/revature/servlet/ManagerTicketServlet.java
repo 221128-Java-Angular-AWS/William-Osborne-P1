@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Set;
+import java.util.TreeSet;
+
 
 public class ManagerTicketServlet extends HttpServlet {
     private TicketService ticketService;
@@ -59,7 +61,7 @@ public class ManagerTicketServlet extends HttpServlet {
         // verification that the user is a manager
         System.out.println(userRole);
         if (userRole.equals("manager")) {
-            Set<Ticket> pendingTickets = ticketService.managerViewTickets();
+            TreeSet<Ticket> pendingTickets = ticketService.managerViewTickets();
 
             String json = mapper.writeValueAsString(pendingTickets);
             System.out.println(json);
