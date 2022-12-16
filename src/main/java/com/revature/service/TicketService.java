@@ -51,11 +51,9 @@ public class TicketService {
         // returns a set of previously submitted tickets for the user of a specified status or all submitted
         // tickets if no status is specified
         if (status != null) {
-            System.out.println(status);
             TreeSet<Ticket> tickets = dao.getEmployeeTickets(userId, status);
             return tickets;
         } else {
-            System.out.println("any status");
             TreeSet<Ticket> tickets = dao.getEmployeeTickets(userId);
             return tickets;
         }

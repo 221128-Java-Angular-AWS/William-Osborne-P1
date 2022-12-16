@@ -59,12 +59,10 @@ public class ManagerTicketServlet extends HttpServlet {
 
         // no need to read the body of the request since it is there are no arguments to pass only
         // verification that the user is a manager
-        System.out.println(userRole);
         if (userRole.equals("manager")) {
             TreeSet<Ticket> pendingTickets = ticketService.managerViewTickets();
 
             String json = mapper.writeValueAsString(pendingTickets);
-            System.out.println(json);
             resp.getWriter().println(json);
             resp.setStatus(200); // 200 OK
         } else {
@@ -93,29 +91,30 @@ public class ManagerTicketServlet extends HttpServlet {
             }
         }
 
-        StringBuilder jsonBuilder = new StringBuilder();
-        BufferedReader reader = req.getReader();
+        if (userRole.equals("manager")) {
 
-        while (reader.ready()) {
-            jsonBuilder.append(reader.readLine());
-        }
+            StringBuilder jsonBuilder = new StringBuilder();
+            BufferedReader reader = req.getReader();
 
-        System.out.println(jsonBuilder);
-        // ObjectMapper makes this easy to read into a map instead of a custom class
-        // only allow one ticketId at a time, maybe revisit and see if there is a way to do more than one at a time
-        // ticketId and status in body json
-        // might as well make a ticket object out of this
-        Ticket ticket = mapper.readValue(jsonBuilder.toString(), Ticket.class);
+            while (reader.ready()) {
+                jsonBuilder.append(reader.readLine());
+            }
 
-        Integer rowsUpdated = ticketService.managerUpdateTicket(ticket);
+            Ticket ticket = mapper.readValue(jsonBuilder.toString(), Ticket.class);
 
-        if (rowsUpdated > 0) {
-            resp.getWriter().println("Ticket successfully updated");
-            resp.setStatus(200); // 200 OK
-        } else{
-            resp.getWriter().print("Ticket update failed. Check ticket id and status. Only pending tickets may be updated");
+            Integer rowsUpdated = ticketService.managerUpdateTicket(ticket);
+
+            if (rowsUpdated > 0) {
+                resp.getWriter().println("Ticket successfully updated");
+                resp.setStatus(200); // 200 OK
+            } else {
+                resp.getWriter().print("Ticket update failed. Check ticket id and status. Only pending tickets may be updated");
+                resp.setStatus(401); // forbidden
+            }
+
+        }else {
+            resp.getWriter().print("Only managers are allowed to update ticket status.");
             resp.setStatus(401); // forbidden
         }
-
     }
 }

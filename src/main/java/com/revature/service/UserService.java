@@ -11,9 +11,9 @@ import java.util.Scanner;
 
 /*
 methods that apply to the user should be created here
- ## register
- ## authenticate
- ## update
+ # DONE # register
+ # DONE # authenticate
+ update
  */
 public class UserService {
     //Create the data access object
@@ -41,7 +41,6 @@ public class UserService {
     }
 
     public User authenticateUser(User user) throws UserNotFoundException, IncorrectPasswordException {
-        // @TODO this is nothing, make it actually authenticate user
         user = dao.AuthenticateUser(user);
         // I dont think I need the if statement due to the exception but will try with and without
         if (!(user == null)) {
@@ -52,6 +51,8 @@ public class UserService {
 
 
     public User updateUser(User user) {
+        // this exists but is not yet implemented
+        // TODO either implement or remove
         dao.updateUser(user);
         return user;
     }

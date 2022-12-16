@@ -47,7 +47,6 @@ public class EmployeeTicketServlet extends HttpServlet {
          */
 
         // get the user id from the cookie (associated with the login session)
-        // TODO: create user object from user id using userDao to check user role
         // should anyone be able to submit a ticket or only employees?
         // if anyone can submit a ticket managers will need additional filtering to
         // prevent updating their own tickets
@@ -98,12 +97,10 @@ public class EmployeeTicketServlet extends HttpServlet {
         // get the user id from the cookie (associated with the login session)
         Integer userId = -1;
         Cookie[] cookies = req.getCookies();
-        System.out.println("Cookie found");
         for (int i = 0; i < cookies.length; i++) {
             if (cookies[i].getName().equals("userId")) {
                 Cookie authCookie = cookies[i];
                 userId = Integer.parseInt(authCookie.getValue());
-                System.out.println("User ID found: " + userId);
             }
         }
 
@@ -115,19 +112,15 @@ public class EmployeeTicketServlet extends HttpServlet {
             jsonBuilder.append(reader.readLine());
         }
 
-        // this is overkill and I should be able to do this a simpler way
-        // TODO: look into a simpler way, maybe convert json to map
+        // create a Ticket object to pass values into the ticketService
         Ticket ticket = mapper.readValue(jsonBuilder.toString(), Ticket.class);
 
         // this will send a user id and either null or a desired status to filter tickets by
+        // TreeSet used for sorted results, if implementing any more filter/sort features a queue would be better
+        // for this since the order could relay solely on the query results
         TreeSet<Ticket> userTickets = ticketService.viewTickets(userId, ticket.getStatus());
 
-        System.out.println(userTickets);
-
-        // because hashSet is unordered the results are not in any ordering. find a way to order results
-        // maybe hashmap and sorted array of keys
         String json = mapper.writeValueAsString(userTickets);
-        System.out.println(json);
         resp.getWriter().println(json);
         resp.setStatus(200); // 200 OK
 

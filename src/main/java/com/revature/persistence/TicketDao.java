@@ -1,15 +1,5 @@
 package com.revature.persistence;
 
-
-
-/*
-submit ticket (create new)
-manager view pending tickets
-manager approve or deny pending tickets
-employee view all previous submissions (for that employee)
-employee filter ticket by status
-*/
-
 import com.revature.pojos.Ticket;
 import com.revature.pojos.User;
 
@@ -17,6 +7,19 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+
+/*
+# DONE # submit ticket (create new)
+# DONE # manager view pending tickets
+# DONE # manager approve or deny pending tickets
+# DONE # employee view all previous submissions (for that employee)
+# DONE # employee filter ticket by status
+
+Stretch
+add reimbursement type into ticket submission
+employee filter by submission type
+add date as well possibly
+*/
 
 
 public class TicketDao {
@@ -50,11 +53,7 @@ public class TicketDao {
             return true;
 
 
-
-
         } catch (SQLException e) {
-            System.out.println(e);
-            System.out.println("Ticket submission failed");
             return false;
         }
     }
@@ -64,7 +63,6 @@ public class TicketDao {
     // need managers to be able to update ticket status
     // need employees to be able to view all previous submissions
     // as well as filter by status
-    //@TODO add date into ticketing system after mvp
     public TreeSet<Ticket> getPendingTickets() {
         // for managers to get all pending tickets
         try {
@@ -82,7 +80,6 @@ public class TicketDao {
                 ticket.setUserId(rs.getInt("user_id"));
                 tickets.add(ticket);
             }
-            System.out.println(tickets);
 
             return tickets;
 
@@ -94,7 +91,7 @@ public class TicketDao {
 
     public Integer updateTicketStatus(Ticket ticket) {
         // allow managers to select a ticket from the pending tickets and approve or deny them
-        // pending filter in query as safeguard to prevent changing status if not pending
+        // pending filter in query as safeguard to prevent changing status if status is not pending
         try {
             String sql = "UPDATE tickets SET status = ? WHERE ticket_id = ? AND status = 'pending';";
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -106,14 +103,9 @@ public class TicketDao {
             return pstmt.getUpdateCount();
 
 
-
-
-
         } catch (SQLException e) {
-            System.out.println(e);
             throw new RuntimeException(e);
         }
-
     }
 
 
@@ -140,7 +132,6 @@ public class TicketDao {
 
 
         } catch (SQLException e) {
-            System.out.println(e);
             throw new RuntimeException(e);
         }
     }
@@ -170,12 +161,9 @@ public class TicketDao {
 
 
         } catch (SQLException e) {
-            System.out.println(e);
             throw new RuntimeException(e);
         }
     }
-
-
 
 
 }

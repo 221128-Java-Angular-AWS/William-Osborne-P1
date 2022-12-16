@@ -34,7 +34,6 @@ public class UserDao {
         // object by getting the serial user_id from the created record and assigning that to the user object
         try {
             // build the sql statement to be passed into the PreparedStatement interface object
-            // (String sql is in method scope)
             String sql = "INSERT INTO users (username, password, user_role) VALUES (?, ?, ?);";
 
             // need to user the optional parameter to return generated keys for the serial user_id
@@ -56,7 +55,6 @@ public class UserDao {
 
         } catch (SQLException e) {
             System.out.println("Error parsing the prepared statement when creating a new user");
-            e.printStackTrace();
         }
     }
 
@@ -83,7 +81,6 @@ public class UserDao {
 
         } catch (SQLException e) {
             System.out.println("Error parsing the prepared statement when updating user records");
-            e.printStackTrace();
         }
     }
 
@@ -133,7 +130,6 @@ public class UserDao {
             ResultSet rs = pstmt.executeQuery();
 
             // deal with username not found
-            // @TODO I am not entirely sure this will work
             if (rs.next()) {
                 if (user.getPassword().equals(rs.getString("password"))) {
                     user.setUserId(rs.getInt("user_id"));

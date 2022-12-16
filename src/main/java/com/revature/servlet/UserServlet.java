@@ -54,18 +54,11 @@ public class UserServlet extends HttpServlet {
             // try to register the new user
             User registeredUser = service.registerNewUser(user);
             resp.getWriter().print("Registration successful. Please login with registered credentials.");
-            System.out.println(registeredUser.toString());
             resp.setStatus(201);  // 201 created
         } catch (UsernameExistsException e) {
             // if the username already exists a UsernameExistsException will be caught
             resp.getWriter().print("Username already exists: " + user.getUsername());
             resp.setStatus(403); //403 forbidden
         }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // @TODO: add functionality to update user account information here
-        // not part of mvp so can wait
     }
 }
