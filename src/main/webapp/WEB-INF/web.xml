@@ -74,4 +74,14 @@
         <servlet-name>pendingTicketViewer</servlet-name>
         <url-pattern>/manage_pending_tickets</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>updatePendingTicket</servlet-name>
+        <servlet-class>com.revature.servlet.ManagerTicketServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>updatePendingTicket</servlet-name>
+        <url-pattern>/update_pending_tickets</url-pattern>
+    </servlet-mapping>
 </web-app>

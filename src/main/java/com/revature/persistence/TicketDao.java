@@ -91,19 +91,25 @@ public class TicketDao {
         }
     }
 
-    public void updateTicketStatus(Ticket ticket, String status) {
+    public Integer updateTicketStatus(Ticket ticket) {
         // allow managers to select a ticket from the pending tickets and approve or deny them
         // pending filter in query as safeguard to prevent changing status if not pending
         try {
-            String sql = "UPDATE tickets SET status = ? WHERE ticket id = ? AND status = 'pending';";
+            String sql = "UPDATE tickets SET status = ? WHERE ticket_id = ? AND status = 'pending';";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, status);
+            pstmt.setString(1, ticket.getStatus());
             pstmt.setInt(2, ticket.getTicketId());
 
-            pstmt.executeUpdate();
+            pstmt.execute();
+
+            return pstmt.getUpdateCount();
 
 
-        } catch (Exception e) {
+
+
+
+        } catch (SQLException e) {
+            System.out.println(e);
             throw new RuntimeException(e);
         }
 
