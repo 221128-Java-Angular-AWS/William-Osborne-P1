@@ -46,10 +46,21 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>userUpdateServlet</servlet-name>
+        <servlet-class>com.revature.servlet.UserAuthServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>userUpdateServlet</servlet-name>
+        <url-pattern>/update-user</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>ticketSubmissionService</servlet-name>
         <servlet-class>com.revature.servlet.EmployeeTicketServlet</servlet-class>
     </servlet>
 
+    <!-- TODO change underscores to hyphens, also remove any capital letters -->
     <servlet-mapping>
         <servlet-name>ticketSubmissionService</servlet-name>
         <url-pattern>/submit_ticket</url-pattern>

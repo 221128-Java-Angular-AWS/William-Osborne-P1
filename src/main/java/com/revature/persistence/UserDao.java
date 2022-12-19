@@ -59,14 +59,13 @@ public class UserDao {
     }
 
 
-    public void updateUser(User user){
+    public void updateUser(User user) throws UsernameExistsException {
         // update the user records to reflect any changes made to the user (change username, password...)
         try {
             //build the sql statement (String sql is in method scope)
             String sql =
                     "UPDATE users " +
-                    "SET (username, password, user_role) " +
-                    "VALUES (?, ?, ?) " +
+                    "SET username = ?, password = ?, user_role = ? " +
                     "WHERE user_id = ?;";
 
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -74,13 +73,16 @@ public class UserDao {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getUserRole());
-            pstmt.setString(4, user.getUserId().toString());
+            pstmt.setInt(4, user.getUserId());
 
             pstmt.executeUpdate();
 
 
         } catch (SQLException e) {
-            System.out.println("Error parsing the prepared statement when updating user records");
+            // this is probably bad practice but the only exception that should happen here is changing to a
+            // username that already exists (unique constraint violation)
+            throw new UsernameExistsException("That username already exists.");
+            //System.out.println("Error parsing the prepared statement when updating user records");
         }
     }
 
@@ -104,7 +106,36 @@ public class UserDao {
 
 
         } catch (SQLException e) {
-            System.out.println("Error parsing the prepared statement when updating user records");
+            System.out.println("Error parsing the prepared statement when searching user records");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public User fetchUserById(User user) {
+        // the user object should only have a user.username value
+        // fetch this from the database
+        // if the result set is empty the username is free and the end user can proceed with registration
+        // otherwise throw a UsernameExists exception
+        try {
+            String sql = "SELECT * FROM users WHERE user_id = ?";
+
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, user.getUserId());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()){
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setUserRole(rs.getString("user_role"));
+            }
+
+
+
+        } catch (SQLException e) {
+            System.out.println("Error parsing the prepared statement when searching user records");
             e.printStackTrace();
         }
         return null;

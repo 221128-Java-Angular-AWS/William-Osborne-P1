@@ -50,7 +50,13 @@ public class UserService {
     }
 
 
-    public User updateUser(User user) {
+    public User fetchUser(User user) {
+        dao.fetchUserById(user);
+        return user;
+    }
+
+
+    public User updateUser(User user) throws UsernameExistsException {
         // this exists but is not yet implemented
         // TODO either implement or remove
         dao.updateUser(user);

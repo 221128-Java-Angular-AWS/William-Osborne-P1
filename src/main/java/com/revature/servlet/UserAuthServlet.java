@@ -3,6 +3,7 @@ package com.revature.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.exceptions.IncorrectPasswordException;
 import com.revature.exceptions.UserNotFoundException;
+import com.revature.exceptions.UsernameExistsException;
 import com.revature.persistence.UserDao;
 import com.revature.pojos.User;
 import com.revature.service.UserService;
@@ -56,7 +57,6 @@ public class UserAuthServlet extends HttpServlet {
             Cookie authCookie = new Cookie("userId", user.getUserId().toString());
             Cookie roleCookie = new Cookie("userRole", user.getUserRole());
             // add the cookie to the response, for now it won't do anything since everything is done in postman
-            // however I can copy the cookie to the sample postman requests when performing ticket servelet operations
             resp.addCookie(authCookie);
             resp.addCookie(roleCookie);
             resp.setStatus(200); // 200 ok
@@ -71,6 +71,51 @@ public class UserAuthServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // @TODO: create the update user servlet here after mvp met
+        // TODO: create the update user servlet here after mvp met
+        // get the logged in user's id from the cookie
+        Integer userId = -1;
+        Cookie[] cookies = req.getCookies();
+        for (int i = 0; i < cookies.length; i++) {
+            if (cookies[i].getName().equals("userId")) {
+                Cookie authCookie = cookies[i];
+                userId = Integer.parseInt(authCookie.getValue());
+            }
+        }
+
+        // create an object of the existing user information as well as a user from the body of the request
+        // this user object will populate null fields in the update user object
+        User existingUser = new User(userId);
+        existingUser = service.fetchUser(existingUser);
+
+        StringBuilder jsonBuilder = new StringBuilder();
+        BufferedReader reader = req.getReader();
+
+        while (reader.ready()) {
+            jsonBuilder.append(reader.readLine());
+        }
+
+        // update null fields so that a complete user object can be sent to update the persistance
+        User userUpdate = mapper.readValue(jsonBuilder.toString(), User.class);
+        userUpdate.setUserId(existingUser.getUserId());
+        if (userUpdate.getUsername() == null || userUpdate.getUsername().equals("")) {
+            userUpdate.setUsername(existingUser.getUsername());
+        }
+        if (userUpdate.getPassword() == null || userUpdate.getPassword().equals("")) {
+            userUpdate.setPassword(existingUser.getPassword());
+        }
+        // for now roles cannot be changed
+        userUpdate.setUserRole(existingUser.getUserRole());
+
+        try {
+            service.updateUser(userUpdate);
+            resp.getWriter().print("User successfully updated.");
+            resp.setStatus(200); // 200 OK
+        } catch (UsernameExistsException e) {
+            resp.getWriter().print("That username is already in use.");
+            resp.setStatus(401); // forbidden
+            throw new RuntimeException(e);
+        }
+
+
     }
 }
