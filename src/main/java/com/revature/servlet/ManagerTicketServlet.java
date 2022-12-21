@@ -54,13 +54,23 @@ public class ManagerTicketServlet extends HttpServlet {
             }
         }
 
-        // again I dont need the class object here since I already have the user id and user role
-        //User user = new User(userId, userRole);
+        // get an optional status value from the request body to filter by status
+        // the additional ability to filter by employee would be useful to add in later as well
+        StringBuilder jsonBuilder = new StringBuilder();
+        BufferedReader reader = req.getReader();
+
+
+        while (reader.ready()) {
+            jsonBuilder.append(reader.readLine());
+        }
+
+        // mapping a whole ticket here feels excessive
+        Ticket ticket = mapper.readValue(jsonBuilder.toString(), Ticket.class);
 
         // no need to read the body of the request since it is there are no arguments to pass only
         // verification that the user is a manager
         if (userRole.equals("manager")) {
-            TreeSet<Ticket> pendingTickets = ticketService.managerViewTickets();
+            TreeSet<Ticket> pendingTickets = ticketService.managerViewTickets(ticket);
 
             String json = mapper.writeValueAsString(pendingTickets);
             resp.getWriter().println(json);

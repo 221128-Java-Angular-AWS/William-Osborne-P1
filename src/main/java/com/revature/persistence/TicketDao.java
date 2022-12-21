@@ -63,11 +63,19 @@ public class TicketDao {
     // need managers to be able to update ticket status
     // need employees to be able to view all previous submissions
     // as well as filter by status
-    public TreeSet<Ticket> getPendingTickets() {
+    public TreeSet<Ticket> getPendingTickets(Ticket ticketStatus) {
         // for managers to get all pending tickets
         try {
-            String sql = "SELECT * FROM tickets WHERE status = 'pending';";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
+            PreparedStatement pstmt;
+            if (ticketStatus.getStatus() != null) {
+                String sql = "SELECT * FROM tickets WHERE status = ?;";
+                pstmt = connection.prepareStatement(sql);
+                pstmt.setString(1, ticketStatus.getStatus());
+            }  else{
+                String sql = "SELECT * FROM tickets;";
+                pstmt = connection.prepareStatement(sql);
+            }
+
             ResultSet rs = pstmt.executeQuery();
 
             TreeSet<Ticket> tickets = new TreeSet<>();

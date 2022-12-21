@@ -60,8 +60,8 @@ public class TicketService {
     }
 
 
-    public TreeSet<Ticket> managerViewTickets() {
-        TreeSet<Ticket> tickets = dao.getPendingTickets();
+    public TreeSet<Ticket> managerViewTickets(Ticket ticket) {
+        TreeSet<Ticket> tickets = dao.getPendingTickets(ticket);
         return tickets;
     }
 
