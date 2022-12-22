@@ -94,6 +94,7 @@ public class UserAuthServlet extends HttpServlet {
             jsonBuilder.append(reader.readLine());
         }
 
+        // TODO this logic could be moved to the service layer
         // update null fields so that a complete user object can be sent to update the persistance
         User userUpdate = mapper.readValue(jsonBuilder.toString(), User.class);
         userUpdate.setUserId(existingUser.getUserId());

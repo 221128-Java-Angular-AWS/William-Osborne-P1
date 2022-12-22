@@ -86,6 +86,8 @@ public class Ticket implements Comparable<Ticket>{
     public int compareTo(Ticket o) {
         // since the primary key ticket_id is serial it will be unique and for the purpose of this it will
         // successfully sort results by oldest to newest
+        // using an ArrayDeque would have been better for keeping query results sorted as returned by the query
+        // as well as not needing to implement Comparable and override compareTo
         if (this.ticketId < o.getTicketId()) {
             return -1;
         } else if (this.ticketId > o.getTicketId()) {
